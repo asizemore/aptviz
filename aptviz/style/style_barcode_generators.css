@@ -1,0 +1,81 @@
+
+/* Elements */
+h1 {
+    font-family: "Helvetica Neue", Helvetica, sans-serif;
+    font-weight: lighter;
+    color: gray;
+    font-size: 45px;
+}
+
+h3 {
+    font-family: "Helvetica Neue", Helvetica, sans-serif;
+    font-weight: lighter;
+    color: gray;
+    font-size: 25px;
+}
+
+div {
+    font-family: "Helvetica Neue", Helvetica, sans-serif;
+    text-align: center;
+    font-weight: lighter;
+    color: gray;
+    font-size: 14px;
+    padding: 10px;
+}
+
+svg {
+    margin: auto;
+}
+
+
+/* Classes */
+/* .bars {
+    stroke-width: 2px;
+} */
+
+
+/* Ids */
+#title-div {
+    text-align: center;
+}
+
+#svg-div {
+    float: left;
+    width: 80%;
+    display: grid;
+    text-align: center;
+}
+
+/* #svg-no-div {
+    float: left;
+}
+
+#button-div {
+    text-align: center;
+    display: grid;
+    grid-gap: 1rem;
+    
+}
+
+#button-div button {
+    background-color: rgba(0,0,0,0);
+    border:0.1em solid black;
+    padding:0.35em 1.2em;
+    margin:0 0.3em 0.3em 0;
+    border-radius:0.12em;
+    box-sizing: border-box;
+    color: gray;
+    transition: all 0.2s;
+    font-family: "Helvetica Neue", Helvetica, sans-serif;
+    font-weight: 300;
+    font-size: 15px;
+}
+
+#button-div button:hover {
+    color:white;
+    background-color:black;
+    
+} */
+
+
+
