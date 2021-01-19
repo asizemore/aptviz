@@ -20,12 +20,12 @@ def create_fake_fsc_df(n_nodes, n_simps, max_dim):
     node_weight = np.random.rand(n_nodes)
     node_faces = [[] for i in np.arange(n_nodes)]
 
-    fsc_df = pd.DataFrame({"cell_id": cell_id, "dim": node_dim, "nodes": node_nodes, "weight": 5+node_weight,
+    fsc_df = pd.DataFrame({"cell_id": cell_id, "dim": node_dim, "nodes": node_nodes, "weight": max_dim+node_weight,
                           "faces": node_faces})
 
 
     for dim in np.arange(1,max_dim+1):
-
+ 
         dim_m1_df = fsc_df[fsc_df["dim"] == dim-1]
         temp_df = pd.DataFrame({"cell_id": np.arange(np.sum(n_simps[:dim]),np.sum(n_simps[:(dim+1)])),
                                 "dim": dim*np.ones(n_simps[dim]),
@@ -38,7 +38,36 @@ def create_fake_fsc_df(n_nodes, n_simps, max_dim):
     #         temp_df["nodes"] = temp_df["faces"].apply(find_nodes, df = dim_m1_df) Explodes for high dim.
 
         fsc_df = pd.concat([fsc_df, temp_df])
+        fsc_df.dim = fsc_df.dim.astype(int)
+
+        # Calculate rank based on weight
+        fsc_df["rank"] = np.argsort(-fsc_df.weight).astype(float)
+
+        # Add random maximal flags
+        fsc_df["is_maximal"] = [np.random.randint(0, 2) for i in np.arange(fsc_df.shape[0])]
 
     print(f'Created df with length {len(fsc_df)}. Expected {sum(n_simps)}.')
     return fsc_df
+
+def create_fake_barcode(fsc_df, n_bars):
+    # Creates a fake barcode from a filtered simplicial complex df. For dev use only.
+    max_filtration = np.max(fsc_df["rank"])
+    max_dim = np.max(fsc_df["dim"])
+
+    bar_id = np.arange(n_bars)
+    bar_dim = np.random.randint(0,max_dim,size=n_bars)
+    bar_birth = np.random.choice(fsc_df[fsc_df.dim==1]["rank"],n_bars)
+    bar_death = np.random.choice(fsc_df[fsc_df.dim==2]["rank"],size = n_bars)
+    bar_rep = [np.random.choice(fsc_df[fsc_df.dim==1].cell_id, size=4, replace=False) for k in np.arange(n_bars)]
+    # simp_weight = np.random.rand(nSimps)*(simp_dim+1)
+
+    bar_df = pd.DataFrame({"bar_id" : bar_id,
+                           "bar_dim" : bar_dim,
+                           "bar_birth" : bar_birth,
+                           "bar_death" : bar_death,
+                           "rep" : bar_rep,
+                           "lifetime": bar_death-bar_birth})
+
+    bar_df["bar_dim"] = bar_df["bar_dim"].astype(str)
+    return bar_df
 
