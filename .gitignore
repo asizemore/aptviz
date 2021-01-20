@@ -6,6 +6,7 @@ Icon*
 .local/
 .jupyter/
 .ipynb_checkpoints
+.pki/
 
 # Pycharm Project
 .idea
