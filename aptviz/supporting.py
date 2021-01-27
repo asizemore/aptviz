@@ -42,11 +42,18 @@ def create_fake_fsc_df(n_nodes, n_simps, max_dim):
         # Calculate rank based on weight
         fsc_df["rank"] = np.argsort(-fsc_df.weight).astype(int)
 
-        # Add random maximal flags
-        fsc_df["is_maximal"] = [np.random.randint(0, 2) for i in np.arange(fsc_df.shape[0])]
 
     print(f'Created df with length {len(fsc_df)}. Expected {sum(n_simps)}.')
     return fsc_df
+
+# Add optional flag column to fsc_df
+def add_fake_indicator(fsc_df, indicator_name):
+
+    # Add random flags
+    fsc_df[indicator_name] = [np.random.randint(0, 2) for i in np.arange(fsc_df.shape[0])]
+
+    return fsc_df
+
 
 def create_fake_barcode(fsc_df, n_bars):
     # Creates a fake barcode from a filtered simplicial complex df. For dev use only.
