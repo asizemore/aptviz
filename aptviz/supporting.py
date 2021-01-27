@@ -8,12 +8,11 @@ def find_nodes(face, df):
     nodes = []
     for cell in face:
         nodes.append(df[df["cell_id"]==cell]["nodes"].item())
-    return np.unique(nodes)
+    return nodes
 
 def create_fake_fsc_df(n_nodes, n_simps, max_dim):
     # For creating a fake data frame with appropriate headings.
 
-    node_data = np.arange(n_nodes)
     cell_id = np.arange(n_nodes)
     node_dim = np.zeros(n_nodes)
     node_nodes = [[i] for i in np.arange(n_nodes)]
@@ -35,7 +34,7 @@ def create_fake_fsc_df(n_nodes, n_simps, max_dim):
             temp_df["nodes"] = temp_df.faces
         else:
             temp_df["nodes"] = [np.random.choice(fsc_df[fsc_df.dim==0].cell_id, dim+1) for i in np.arange(n_simps[dim])]
-    #         temp_df["nodes"] = temp_df["faces"].apply(find_nodes, df = dim_m1_df) Explodes for high dim.
+            # temp_df["nodes"] = temp_df["faces"].apply(find_nodes, df = dim_m1_df) # Doesn't work? 
 
         fsc_df = pd.concat([fsc_df, temp_df])
         fsc_df.dim = fsc_df.dim.astype(int)
