@@ -40,7 +40,7 @@ def create_fake_fsc_df(n_nodes, n_simps, max_dim):
         fsc_df.dim = fsc_df.dim.astype(int)
 
         # Calculate rank based on weight
-        fsc_df["rank"] = np.argsort(-fsc_df.weight).astype(float)
+        fsc_df["rank"] = np.argsort(-fsc_df.weight).astype(int)
 
         # Add random maximal flags
         fsc_df["is_maximal"] = [np.random.randint(0, 2) for i in np.arange(fsc_df.shape[0])]
