@@ -13,6 +13,7 @@ import plotly.io as pio
 # ApTViz
 from aptviz import aptviz_themes
 from aptviz.supporting import *
+from aptviz.aptviz_themes import *
 
 # Load ApTViz visualization theme
 pio.templates.default = "aptviz"
@@ -34,7 +35,7 @@ def fsc_histogram_thresholded(fsc_df, prop = "dim", filter_on = "weight", thresh
     else:
         print("Please enter a valid keep value: geq or leq.")
     
-    fig = px.histogram(fsc_filtered, x = prop, color_discrete_sequence=["teal"])
+    fig = px.histogram(fsc_filtered, x = prop, color_discrete_sequence=["#995949"])
     return fig
 
 # Create heatmap of simplex count across the filtration, separated by dimension
@@ -71,4 +72,57 @@ def fsc_attribute_across_filtration(fsc_df, filtration_steps, filtration_col="we
     
     return fig
 
+
+# Create paired violin plot comparing distribution of simplices split by dimension
+def fsc_violin_compare_by_dim(fsc_df, indicator_col, prop = "weight"):
+
+    fig = go.Figure()
+
+    # Calculate max dim from simplicial complex
+    max_dim = np.max(fsc_df.dim)
+
+    for dim in np.arange(max_dim+1):
+
+        # Subset the dataframe by current dimension
+        temp_df = fsc_df[fsc_df["dim"] == dim]
+
+        # Add indicator column violin
+        fig.add_trace(go.Violin(x=temp_df["dim"][temp_df[indicator_col] == 1],
+                                y=temp_df[prop][temp_df[indicator_col] == 1],
+                                legendgroup = "Yes",
+                                scalegroup="Yes",
+                                name = f'{indicator_col} dim {dim}',
+                                side = "negative",
+                                line_color = davos_colors[dim],
+                                pointpos = -1.3))
+
+        # Add entire complex violin
+        fig.add_trace(go.Violin(x=temp_df["dim"],
+                                y=temp_df[prop],
+                                legendgroup = "Yes",
+                                scalegroup="No",
+                                name = f'All dim {dim}',
+                                side = "positive",
+                                line_color = davos_colors[dim],
+                                pointpos = 1.3,
+                                opacity = 0.6))
+
+    fig.update_traces(meanline_visible=True,
+                      points='all', # show all points
+                      marker_size = 3,
+                      marker_opacity = 0.6,
+                      jitter = 0.2,
+                      scalemode='width') # or "count"
+    fig.update_layout(violingap=0,
+                      violinmode='overlay',
+                      violingroupgap = 0.5)
+
+    fig.update_xaxes(
+        title_text="dim"
+    )
+    fig.update_yaxes(
+        title_text=prop
+    )
+    
+    return fig
 
