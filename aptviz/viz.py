@@ -223,3 +223,55 @@ def plot_pd_faceted(bar_df, axis_range, col_wrap = 3):
     )
     
     return fig
+
+
+
+
+# Plot barcode
+def plot_barcode(bar_df, axis_range):
+    
+    # Sort bars
+    bar_df_sorted = bar_df.sort_values(by=["bar_dim", "bar_birth"], ascending=[True, axis_range[0]<axis_range[1]])
+    bar_df_sorted = bar_df_sorted.reset_index(drop=True)
+    
+    fig = go.Figure()
+
+    for b,bar in bar_df_sorted.iterrows():
+
+        if (bar_df_sorted.iloc[b-1]["bar_dim"] != bar["bar_dim"]) :
+            showlegendtf = True
+        else :
+            showlegendtf = False
+
+        fig.add_trace(go.Scatter(x=[bar["bar_birth"], bar["bar_death"]], y=[b+1, b+1],
+                        mode='lines',
+                        name=f'dim {bar["bar_dim"]}',
+                        showlegend=showlegendtf,
+                        line=dict(color=aptviz_themes.davos_colors[int(bar["bar_dim"])]),
+                        hovertemplate =
+                            f'<i>id</i>: {bar["bar_id"]}'+
+                            f'<br><b>rep</b>: {bar["rep"]}'))
+
+
+
+    # Add nice effects and such
+    fig.update_layout(title_text="Barcode")
+    fig.update_yaxes(title_text = "H_k")
+    fig.update_xaxes(title_text = "Filtration value",
+                     range = axis_range,
+                     zeroline = False)
+
+    fig.update_layout(legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=1.02,
+        xanchor="right",
+        x=1
+    ))
+    fig.update_layout(hovermode="x")
+    fig.update_xaxes(spikemode="toaxis",
+                     spikedash = "dash",
+                     spikethickness = 1)
+    
+    return fig
+
