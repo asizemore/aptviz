@@ -104,7 +104,7 @@ The `examples_ph_output.ipynb` notebook contains the following functions used to
 * `plot_pd_faceted(bar_df, axis_range, col_wrap = 3)`
 * `plot_barcode(bar_df, axis_range)`
 * `plot_barcode_highlighted(bar_df, axis_range, indicator_col, shaded=False)`
-* `plot_barcode_continuous_highlight(bar_df, axis_range, continuous_prop)
+* `plot_barcode_continuous_highlight(bar_df, axis_range, continuous_prop)`
 
 
 All of the above functions return a [plotly figure object](https://plotly.com/python/figure-structure/) that can be further modified.
