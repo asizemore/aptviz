@@ -319,7 +319,7 @@ def plot_barcode_highlighted(bar_df, axis_range, indicator_col, shaded=False):
 
             fig.add_trace(go.Scatter(x=[bar["bar_birth"], bar["bar_death"]], y=[b+1, b+1],
                             mode='lines',
-                            name=f'{indicator_col}={bar[indicator_col]}',
+                            name=f'{indicator_col} {bar[indicator_col]}',
                             opacity = opacity,
                             showlegend=showlegendtf,
                             line=dict(color=color),
@@ -346,10 +346,10 @@ def plot_barcode_highlighted(bar_df, axis_range, indicator_col, shaded=False):
 
             fig.add_trace(go.Scatter(x=[bar["bar_birth"], bar["bar_death"]], y=[b+1, b+1],
                             mode='lines',
-                            name=f'{indicator_col}={bar[indicator_col]}',
+                            name=f'{indicator_col} {bar[indicator_col]}',
                             opacity = opacity,
                             showlegend=showlegendtf,
-                            line=dict(color=color),
+                            line=dict(color=aptviz_themes.davos_colors[int(bar["bar_dim"])]),
                             hovertemplate =
                                 f'<i>id</i>: {bar["bar_id"]}'+
                                 f'<br><b>rep</b>: {bar["rep"]}'))
