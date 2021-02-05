@@ -20,7 +20,9 @@ Contact [me](https://www.aesizemore.com/) for questions and comments.
 
 ## Data organization
 
-These functions are currently very opinionated on the organization of data. 
+These functions expect filtered simplicial complex or barcode data in a specific organizgion:
+
+<br>
 
 `fsc_df` is a [pandas data frame](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html) with one row per simplex and the following columns:
 
@@ -35,10 +37,22 @@ These functions are currently very opinionated on the organization of data.
 * `rank`: An integer indicating the simplex rank. See [1, 2] for more details. This column can be ignored if only using the weight of simplices. See function flags for rank vs. weight.
 
 **Optional**
-* "indicator column": Entries = 0, 1. Examples include `is_maximal`, in which maximal simplices are marked with 1, and `in_subcomplex`, in which simplices involved in a particular subcomplex are marked with 1.
+* `indicator column`: Entries = 0, 1. Examples include `is_maximal`, in which maximal simplices are marked with 1, and `in_subcomplex`, in which simplices involved in a particular subcomplex are marked with 1.
 
+<br>
 
-`bar_df` 
+`bar_df` is a [pandas data frame](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html) with one row per bar and the following columns:
+
+**Required**
+* `bar_id`: An integer used to reference the bar (persistent cycle). This number should be unique to the bar.
+* `bar_dim`: An integer *k* denoting the dimension of the persistent $k$-cycle.
+* `bar_birth`: Filtration value at which bar is born.
+* `bar_death`: Filtration value at which bar dies.
+
+**Optional**
+* `rep`: A list of `cell_id`s corresponding to simplices in the associated representative. This column is only used in a subset of plotting functions
+* `indicator_col`: Entries = 0,1. Used to highlight bars with a certain property. Examples include `contains_node_of_interest`.
+* `continuous_prop`: Numeric. Can be used to provide a color for bars instead `bar_dim`.
 
 
 ## Assumptions
