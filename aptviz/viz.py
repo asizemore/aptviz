@@ -3,6 +3,8 @@
 import numpy as np
 import sys
 import pandas as pd
+import matplotlib.colors
+import matplotlib.cm
 
 # Plotly
 import plotly.figure_factory as ff
@@ -396,5 +398,91 @@ def plot_barcode_highlighted(bar_df, axis_range, indicator_col, shaded=False):
         
     fig.update_layout(hovermode="closest")
 
+    
+    return fig
+
+
+# Plot barcode coloring bars by a continuous value
+def plot_barcode_continuous_highlight(bar_df, axis_range, continuous_prop):
+    
+    # Prepare colormap
+    vmin = np.min(bar_df[continuous_prop])
+    vmax = np.max(bar_df[continuous_prop])
+
+    norm = matplotlib.colors.Normalize(vmin=vmin, vmax=vmax)
+    cmap = matplotlib.cm.get_cmap('cividis')
+
+
+    fig = go.Figure()
+    bar_df_sorted = bar_df.sort_values(by=["bar_dim", "bar_birth"], ascending=[True, axis_range[0]<axis_range[1]])
+    bar_df_sorted = bar_df_sorted.reset_index(drop=True)
+    max_dim = np.max(bar_df["bar_dim"].astype(int))
+    bar_counts_cumsum = np.cumsum([len(bar_df[bar_df["bar_dim"].astype(int)==dim]) for dim in np.arange(max_dim+1)])
+
+
+    for b,bar in bar_df_sorted.iterrows():
+
+        if (b==1) :
+            showlegendtf = True
+        else :
+            showlegendtf = False
+
+
+        fig.add_trace(go.Scatter(x=[bar["bar_birth"], bar["bar_death"]], y=[b+1, b+1],
+                        mode='lines+markers',
+                        marker = dict(size=0.1,
+                                      showscale = showlegendtf,
+                                      colorscale='cividis',
+                                      cmin=vmin,
+                                      cmax=vmax,
+                                      colorbar = dict(title=continuous_prop)),
+                        name=f'bar {bar["bar_id"]}',
+                        showlegend=False,
+                        line=dict(color=f'rgba{cmap(norm(bar[continuous_prop]))}'),
+                        hovertemplate =
+                            f'<i>id</i>: {bar["bar_id"]}'+
+                            f'<br>rep: {bar["rep"]}'+
+                            f'<br>dim: {bar["bar_dim"]}' +
+                            f'<br><b>{continuous_prop}</b>: {bar[continuous_prop]}'))
+
+
+
+    # Add annotations
+    for dim in np.arange(max_dim+1):
+        fig.add_annotation(dict(font=dict(color=aptviz_themes.davos_colors[dim],size=12),
+                                    #x=x_loc,
+                                    x=1.025,
+                                    y=(bar_counts_cumsum[dim] + bar_counts_cumsum[dim-1])/2 if dim>0 else bar_counts_cumsum[dim]/2,
+                                    showarrow=False,
+                                    text=f'<b>H<sub>{dim}</sub></b>',
+                                    textangle=0,
+                                    xref="paper",
+                                    yref="y"
+                               ))
+        fig.add_trace(go.Scatter(x = [axis_range[1], axis_range[1]],
+                                 y = [bar_counts_cumsum[dim-1], bar_counts_cumsum[dim]] if dim>0 else [0, bar_counts_cumsum[dim]],
+                                 marker_symbol=41,
+                                 mode="markers+lines",
+                                 marker_line_width = 1,
+                                 marker_size =10,
+                                 showlegend=False,
+                                 line_width=6,
+                                 line_color=aptviz_themes.davos_colors[dim],
+                                 marker_line_color = "white"
+                                ))
+
+    # Finalize figure
+    fig.update_layout(title_text="Barcode")
+    fig.update_yaxes(title_text = "H<sub>k</sub>")
+    fig.update_xaxes(title_text = "Filtration value",
+                     range = axis_range,
+                     zeroline=False)
+
+    # Spike lines and interactivity
+    fig.update_xaxes(spikemode="toaxis",
+                spikedash = "dash",
+                spikethickness = 1,
+                spikesnap="data")
+    fig.update_layout(hovermode="closest")
     
     return fig
