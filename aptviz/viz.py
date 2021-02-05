@@ -176,3 +176,50 @@ def plot_pd(bar_df, axis_range):
     
     return fig
 
+
+# Plot faceted persistence diagram
+def plot_pd_faceted(bar_df, axis_range, col_wrap = 3):
+    
+    # Calculate maximum dimension
+    max_dim = np.max(bar_df["bar_dim"].astype(int))
+    
+    fig = px.scatter(bar_df, x="bar_birth", y="bar_death", color="bar_dim", template = "plotly_white",
+                     title="Persistence Diagrams (faceted)",
+                     hover_data = ["rep"],
+                     color_discrete_sequence=aptviz_themes.davos_colors,
+                     facet_col = "bar_dim",
+                     facet_col_wrap=col_wrap,
+                     facet_col_spacing = 0.1,
+                     facet_row_spacing = 0.2,
+                     category_orders = {"bar_dim": [str(x) for x in np.arange(max_dim)]})
+
+    fig.update_traces(marker_opacity = 0.7,
+                      marker_line_color = my_charcoal,
+                      marker_line_width = 0.2)
+
+    trace = go.Scatter(
+            x=axis_range,
+            y=axis_range,
+            mode="lines",
+            line=go.scatter.Line(color= 'rgba(187, 190, 191, .9)', width=0.5),
+            showlegend=False)
+
+
+    # Add trace to all non-empty plots
+    fig.add_trace(trace, row="all", col="all", exclude_empty_subplots=True)
+
+
+    # Update axes
+    fig.update_yaxes(
+        scaleratio = 1,
+        range = axis_range,
+        title_text="death"
+      )
+
+    fig.update_xaxes(
+        range = axis_range,
+        constrain='domain',
+        title_text="birth",
+    )
+    
+    return fig
