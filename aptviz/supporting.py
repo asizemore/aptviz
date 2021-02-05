@@ -55,24 +55,22 @@ def add_fake_indicator(fsc_df, indicator_name):
     return fsc_df
 
 
-def create_fake_barcode(fsc_df, n_bars):
+def create_fake_barcode(fsc_df, n_bars, filter_on="weight"):
     # Creates a fake barcode from a filtered simplicial complex df. For dev use only.
-    max_filtration = np.max(fsc_df["rank"])
     max_dim = np.max(fsc_df["dim"])
 
     bar_id = np.arange(n_bars)
-    bar_dim = np.random.randint(0,max_dim,size=n_bars)
-    bar_birth = np.random.choice(fsc_df[fsc_df.dim==1]["rank"],n_bars)
-    bar_death = np.random.choice(fsc_df[fsc_df.dim==2]["rank"],size = n_bars)
-    bar_rep = [np.random.choice(fsc_df[fsc_df.dim==1].cell_id, size=4, replace=False) for k in np.arange(n_bars)]
-    # simp_weight = np.random.rand(nSimps)*(simp_dim+1)
+    bar_dim = np.random.randint(0,max_dim-1,size=n_bars)
+    bar_birth = np.array([np.random.choice(fsc_df[fsc_df.dim==i][filter_on],1)[0] for i in bar_dim])
+    bar_death = np.array([np.random.choice(fsc_df[fsc_df.dim==(i+1)][filter_on],1)[0] for i in bar_dim])
+    bar_rep = [np.random.choice(fsc_df[fsc_df.dim==i].cell_id, size=4, replace=False) for i in bar_dim]
 
     bar_df = pd.DataFrame({"bar_id" : bar_id,
-                           "bar_dim" : bar_dim,
-                           "bar_birth" : bar_birth,
-                           "bar_death" : bar_death,
-                           "rep" : bar_rep,
-                           "lifetime": bar_death-bar_birth})
+                        "bar_dim" : bar_dim,
+                        "bar_birth" : bar_birth,
+                        "bar_death" : bar_death,
+                        "rep" : bar_rep,
+                        "lifetime": np.abs(bar_death-bar_birth)})
 
     bar_df["bar_dim"] = bar_df["bar_dim"].astype(str)
     return bar_df

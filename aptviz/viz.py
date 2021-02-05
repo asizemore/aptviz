@@ -79,7 +79,7 @@ def fsc_violin_compare_by_dim(fsc_df, indicator_col, prop = "weight"):
     fig = go.Figure()
 
     # Calculate max dim from simplicial complex
-    max_dim = np.max(fsc_df.dim)
+    max_dim = np.max(fsc_df.dim.astype(int))
 
     for dim in np.arange(max_dim+1):
 
@@ -123,6 +123,56 @@ def fsc_violin_compare_by_dim(fsc_df, indicator_col, prop = "weight"):
     fig.update_yaxes(
         title_text=prop
     )
+    
+    return fig
+
+
+# Plot overlaid persistence diagram
+def plot_pd(bar_df, axis_range):
+
+    # Calculate maximum dimension
+    max_dim = np.max(bar_df["bar_dim"].astype(int))
+
+    fig = px.scatter(bar_df, x="bar_birth", y="bar_death", color="bar_dim",
+                     title="Persistence Diagrams (overlayed)", hover_data = ["rep"],
+                     category_orders = {"bar_dim":[str(x) for x in np.arange(max_dim)]})
+
+
+
+    fig.update_yaxes(
+        scaleanchor = "x",
+        scaleratio = 1,
+        range = axis_range,
+        title_text="death",
+        zeroline = False
+      )
+
+    fig.update_xaxes(
+        range = axis_range,
+        constrain='domain',
+        title_text="birth",
+        layer = "above traces",
+        zeroline = False
+    )
+
+    fig.update_traces(mode='markers',
+                      marker_opacity=0.7,
+                      marker_size=12,
+                      marker_line_color = my_charcoal,
+                      marker_line_width = 0.2)
+    
+    fig.update_layout(hovermode = 'closest')
+
+    fig.add_trace(
+        go.Scatter(
+            x=axis_range,
+            y=axis_range,
+            mode="lines",
+            line=go.scatter.Line(color= 'rgba(187, 190, 191, .9)', width=0.5),
+            showlegend=False,
+            opacity = 0.6)
+    )
+
     
     return fig
 
