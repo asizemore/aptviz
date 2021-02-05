@@ -3,7 +3,7 @@
 The applied topology visualiation (ApTViz) package contains functions designed to create data graphics from common TDA analyses and structures. Visualization functions rely on some combination of [Plotly](https://plotly.com/python/), JavaScript, [Flask](https://flask.palletsprojects.com/en/1.1.x/), and [D3](https://observablehq.com/@d3). Many of the colors used in these functions are from [Fabio Crameri's colormaps](http://www.fabiocrameri.ch/visualisation.php) [1].
 
 
-<!-- Ann insert nice picture here -->
+![Example barcode plot with a selction of bars highlighted](/images/barcode_example.png)
 
 Contact [me](https://www.aesizemore.com/) for questions and comments.
 
@@ -15,13 +15,14 @@ Contact [me](https://www.aesizemore.com/) for questions and comments.
 
 ## Table of Contents
 
-* Expected data organization
-* Assumptions
-* Filtered simplicial complex visualizations
-* Subcomplex-focused visualizations
-* PH output viz
-<!-- * More on html output files -->
-* Future goals
+* [Expected data organization](https://github.com/asizemore/aptviz#data-organization)
+* [Assumptions](https://github.com/asizemore/aptviz#assumptions)
+* [Filtered simplicial complex visualizations](https://github.com/asizemore/aptviz#filtered-simplicial-complex-viz)
+* [Subcomplex-focused visualizations](https://github.com/asizemore/aptviz#subcomplex-focused-visualizations)
+* [PH output viz](https://github.com/asizemore/aptviz#persistent-homology-outputs)
+
+* [Future goals](https://github.com/asizemore/aptviz#future-goals)
+* [References](https://github.com/asizemore/aptviz#references)
 
 <br>
 
@@ -57,7 +58,7 @@ These functions expect filtered simplicial complex or barcode data in a specific
 * `bar_death`: Filtration value at which bar dies.
 
 **Optional**
-* `rep`: A list of `cell_id`s corresponding to simplices in the associated representative. This column is only used in a subset of plotting functions
+* `rep`: A list of `cell_id`s corresponding to simplices in the associated representative. This column is only used in a subset of plotting functions.
 * <indicator_col>: Indicator column with entries = 0,1. Used to highlight bars with a certain property. Examples include `contains_node_of_interest`.
 * <continuous_prop>: Column containing a numeric property of each bar. Can be used to provide a color for bars instead `bar_dim`.
 
