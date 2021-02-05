@@ -38,6 +38,9 @@ These functions are currently very opinionated on the organization of data.
 * "indicator column": Entries = 0, 1. Examples include `is_maximal`, in which maximal simplices are marked with 1, and `in_subcomplex`, in which simplices involved in a particular subcomplex are marked with 1.
 
 
+`bar_df` 
+
+
 ## Assumptions
 
 These functions are particular about data organization (see previous section), but they also make a few assumptions about the data.
@@ -49,6 +52,8 @@ These functions are particular about data organization (see previous section), b
 3. *Simplex weights are unique.* Most functions should work regardless, but currently the code is not designed to handle non-unique weights. This will be removed in a later version.
 
 4. *Simplex ranks are unique.* Most functions should work regardless, but currently the code is not designed to handle non-unique ranks. This will be removed in a later version.
+
+5. *One representative per bar.* Functions are prepared for exactly one representative per bar. If multiple representatives are needed, for example if we wanted to use all minimal generators, consider adding all of those simplex ids within the one representative list in the `rep` column.
 
 
 ## Filtered simplicial complex viz

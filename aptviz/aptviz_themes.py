@@ -6,6 +6,7 @@ import plotly.io as pio
 
 my_charcoal = "#3f4142"
 my_lightgray = "#ebf0f2"
+highlight = "#8D3B34"
 
 # From https://github.com/empet/scientific-colorscales/blob/master/scicolorscales.py
 lapaz= [[0.0, 'rgb(26, 12, 101)'],

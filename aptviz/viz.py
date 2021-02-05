@@ -275,3 +275,126 @@ def plot_barcode(bar_df, axis_range):
     
     return fig
 
+
+
+## Plot barcode with highlights
+def plot_barcode_highlighted(bar_df, axis_range, indicator_col, shaded=False):
+    
+    # Prepare figure and sort barcode
+    fig = go.Figure()
+    bar_df_sorted = bar_df.sort_values(by=["bar_dim", "bar_birth"], ascending=[True, axis_range[0]<axis_range[1]])
+    bar_df_sorted = bar_df_sorted.reset_index(drop=True)
+    max_dim = np.max(bar_df["bar_dim"].astype(int))
+    bar_counts_cumsum = np.cumsum([len(bar_df[bar_df["bar_dim"].astype(int)==dim]) for dim in np.arange(max_dim+1)])
+
+    if shaded:
+        # Plot barcode with shaded areas
+
+        # Add filled areas
+        for dim in np.arange(max_dim+1):
+            
+            fig.add_trace(go.Scatter(
+                x=axis_range,
+                y=[bar_counts_cumsum[dim]+0.5, bar_counts_cumsum[dim]+0.5],
+                mode="none",
+                line=dict(color=aptviz_themes.davos_colors[dim], width=0.1),
+                fillcolor = aptviz_themes.davos_colors[dim].replace(')',', 0.2)').replace('b(','ba('),
+                fill='tozeroy' if dim==0 else 'tonexty',
+                showlegend=False
+            ))
+
+        # Draw bars
+        counter = 0
+        for b,bar in bar_df_sorted.iterrows():
+
+            if (bar_df_sorted.iloc[b-1][indicator_col] != bar[indicator_col]) & (counter < 2) :
+                showlegendtf = True
+                counter = counter +1
+            else :
+                showlegendtf = False
+
+            # Set color and opacity
+            color = aptviz_themes.my_charcoal if bar[indicator_col] else "#abb0b3"
+            opacity = 1 if bar[indicator_col] else 0.9
+
+            fig.add_trace(go.Scatter(x=[bar["bar_birth"], bar["bar_death"]], y=[b+1, b+1],
+                            mode='lines',
+                            name=f'{indicator_col}={bar[indicator_col]}',
+                            opacity = opacity,
+                            showlegend=showlegendtf,
+                            line=dict(color=color),
+                            hovertemplate =
+                                f'<i>id</i>: {bar["bar_id"]}'+
+                                f'<br><b>rep</b>: {bar["rep"]}'))
+
+    else:
+        # Plot gray barcode with highlighted bars - no shading
+
+        # Draw bars
+        counter = 0
+        for b,bar in bar_df_sorted.iterrows():
+
+            if (bar_df_sorted.iloc[b-1][indicator_col] != bar[indicator_col]) & (counter < 2) :
+                showlegendtf = True
+                counter = counter +1
+            else :
+                showlegendtf = False
+
+            # Set color and opacity
+            color = aptviz_themes.highlight if bar[indicator_col] else aptviz_themes.davos_colors[int(bar["bar_dim"])]
+            opacity = 1 if bar[indicator_col] else 0.2
+
+            fig.add_trace(go.Scatter(x=[bar["bar_birth"], bar["bar_death"]], y=[b+1, b+1],
+                            mode='lines',
+                            name=f'{indicator_col}={bar[indicator_col]}',
+                            opacity = opacity,
+                            showlegend=showlegendtf,
+                            line=dict(color=color),
+                            hovertemplate =
+                                f'<i>id</i>: {bar["bar_id"]}'+
+                                f'<br><b>rep</b>: {bar["rep"]}'))
+
+
+
+
+
+    # Finalize plot and add annotations
+
+    for dim in np.arange(max_dim+1):
+                    
+        fig.add_annotation(dict(font=dict(color=aptviz_themes.davos_colors[dim],size=12),
+                                #x=x_loc,
+                                x=1.02,
+                                y=(bar_counts_cumsum[dim] + bar_counts_cumsum[dim-1])/2 if dim>0 else bar_counts_cumsum[dim]/2,
+                                showarrow=False,
+                                text=f'<b>H<sub>{dim}</sub></b>',
+                                textangle=0,
+                                xref="paper",
+                                yref="y"
+                            ))
+        
+    fig.update_layout(legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=1.02,
+        xanchor="right",
+        x=1),
+        title_text="Barcode",
+        margin=dict(t=150))
+
+    fig.update_yaxes(title_text = "H<sub>k</sub>")
+
+    fig.update_xaxes(title_text = "Filtration value",
+                    range = axis_range,
+                    zeroline = False)
+    
+    # Spike lines and interactivity
+    fig.update_xaxes(spikemode="toaxis",
+                spikedash = "dash",
+                spikethickness = 1,
+                spikesnap="data")
+        
+    fig.update_layout(hovermode="closest")
+
+    
+    return fig
