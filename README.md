@@ -1,6 +1,6 @@
 # Applied Topology Visualizations
 
-The applied topology visualiation (ApTViz) package contains functions designed to create data graphics from common TDA analyses and structures. Visualization functions rely on some combination of [Plotly](https://plotly.com/python/), JavaScript, [Flask](https://flask.palletsprojects.com/en/1.1.x/), and [D3](https://observablehq.com/@d3).
+The applied topology visualiation (ApTViz) package contains functions designed to create data graphics from common TDA analyses and structures. Visualization functions rely on some combination of [Plotly](https://plotly.com/python/), JavaScript, [Flask](https://flask.palletsprojects.com/en/1.1.x/), and [D3](https://observablehq.com/@d3). Many of the colors used in these functions are from [Fabio Crameri's colormaps](http://www.fabiocrameri.ch/visualisation.php).
 
 
 <!-- Ann insert nice picture here -->
