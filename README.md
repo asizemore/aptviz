@@ -35,7 +35,7 @@ These functions are currently very opinionated on the organization of data.
 * `rank`: An integer indicating the simplex rank. See [1, 2] for more details. This column can be ignored if only using the weight of simplices. See function flags for rank vs. weight.
 
 **Optional**
-* "indicator column": Entries in [0, 1]. Examples include `is_maximal`, in which maximal simplices are marked with 1, and `in_subcomplex`, in which simplices involved in a particular subcomplex are marked with 1.
+* "indicator column": Entries = 0, 1. Examples include `is_maximal`, in which maximal simplices are marked with 1, and `in_subcomplex`, in which simplices involved in a particular subcomplex are marked with 1.
 
 
 ## Assumptions

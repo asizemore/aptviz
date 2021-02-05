@@ -105,7 +105,7 @@ def fsc_violin_compare_by_dim(fsc_df, indicator_col, prop = "weight"):
                                 side = "positive",
                                 line_color = davos_colors[dim],
                                 pointpos = 1.3,
-                                opacity = 0.6))
+                                opacity = 0.5))
 
     fig.update_traces(meanline_visible=True,
                       points='all', # show all points
