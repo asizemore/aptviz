@@ -39,7 +39,7 @@ let is_clicked = 0;
 
 
 
-d3.json("../data/bar_df.json", function(error1, bar_df) {
+d3.json("../data/bar_test.json", function(error1, bar_df) {
 
     if (error1) throw error1;
 
